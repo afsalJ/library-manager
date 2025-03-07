@@ -101,6 +101,7 @@ public class LibraryManager {
             String choice = inputScanner.nextLine();
             user.startOperation(choice);
         }
+        loggedIn = false;
     }
 
     public static void main(String[] args) {

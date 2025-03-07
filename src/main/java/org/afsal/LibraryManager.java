@@ -79,7 +79,11 @@ public class LibraryManager {
         if (username.matches(usernameRule)) {
             if (password.matches(passwordRule)) {
                 user = new Patron(username, password);
-                return userDao.addUser(user);
+                if(!userDao.addUser(user)){
+                    System.out.println("Username already exists!");
+                } else {
+                    return true;
+                }
             } else {
                 System.out.println("Password must not contain space\nMust be more than 8 characters");
             }
@@ -132,8 +136,6 @@ public class LibraryManager {
                 } else if ("register".equalsIgnoreCase(choice)) {
                     if (register()) {
                         System.out.println("Registered successfully");
-                    } else {
-                        System.out.println("Username already exists!");
                     }
                 }
 

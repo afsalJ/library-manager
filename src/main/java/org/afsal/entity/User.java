@@ -16,4 +16,6 @@ public interface User {
     void setPassword(String password);
 
     boolean isLoggedIn();
+
+    String getMenu();
 }

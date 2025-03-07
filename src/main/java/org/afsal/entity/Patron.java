@@ -9,7 +9,6 @@ public class Patron implements User {
     private       String  username;
     private       String  password;
     public        boolean loggedIn;
-    public static String  menu          = "1.Borrow Book (BB)\n2.Return Book (RB)\n3.Logout (L)";
     private final Scanner patronScanner = LibraryManager.inputScanner;
 
     public Patron(String username, String password) {
@@ -94,5 +93,10 @@ public class Patron implements User {
     @Override
     public String toString() {
         return "Username: " + this.username;
+    }
+
+    @Override
+    public String getMenu(){
+        return "1.Borrow Book (BB)\n2.Return Book (RB)\n3.Logout (L)";
     }
 }

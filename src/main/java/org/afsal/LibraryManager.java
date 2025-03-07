@@ -2,7 +2,6 @@ package org.afsal;
 
 import org.afsal.dao.BookDao;
 import org.afsal.dao.UserDao;
-import org.afsal.entity.Admin;
 import org.afsal.entity.Patron;
 import org.afsal.entity.User;
 
@@ -13,14 +12,16 @@ import java.util.Scanner;
 
 public class LibraryManager {
 
-    public static final Scanner                        inputScanner = new Scanner(System.in);
-    public static       UserDao                        userDao      = new UserDao();
-    public static       BookDao                        bookDao      = new BookDao();
-    private static      HashMap<String, List<Integer>> booksByUser  = new HashMap<>();
+    public static final Scanner                        inputScanner    = new Scanner(System.in);
+    public static       UserDao                        userDao         = new UserDao();
+    public static       BookDao                        bookDao         = new BookDao();
+    private static      HashMap<String, List<Integer>> booksByUser     = new HashMap<>();
     private static      User                           user;
-    private static      String                         menu         = "1.Login\n2.Register";
-    private static      String                         passwordRule = "^(?=\\S+$).{8,}$";
-    private static      String                         usernameRule = "^[a-zA-Z0-9_]{4,}$";
+    private static      String                         menu            = "1.Login (L)\n2.Register (R)\n3.Exit (E)";
+    private static      String                         passwordRule    = "^(?=\\S+$).{8,}$";
+    private static      String                         usernameRule    = "^[a-zA-Z0-9_]{4,}$";
+    private static      boolean                        loggedIn        = false;
+    private static      int                            maxLoginAttempt = 3;
 
     public static boolean authenticate(String username, String password) {
         if (username != null && password != null) {
@@ -95,19 +96,11 @@ public class LibraryManager {
 
     public static void startUser() {
         System.out.println("Welcome " + user.getUsername());
-        String menu = "";
-        if (user instanceof Admin) {
-            menu = Admin.menu;
-        } else if (user instanceof Patron) {
-            menu = Patron.menu;
-        }
-
         while (user.isLoggedIn()) {
-            System.out.print(menu + "\n:");
+            System.out.print(user.getMenu() + "\n:");
             String choice = inputScanner.nextLine();
             user.startOperation(choice);
         }
-
     }
 
     public static void main(String[] args) {
@@ -118,27 +111,31 @@ public class LibraryManager {
                 System.out.println("Welcome to the Library Manager");
                 System.out.print(menu + "\n:");
                 String choice = inputScanner.nextLine();
-                boolean loggedIn = false;
-                if ("login".equalsIgnoreCase(choice)) {
+
+                if ("login".equalsIgnoreCase(choice) || "l".equalsIgnoreCase(choice)) {
                     int loginAttempts = 0;
-                    while (++loginAttempts <= 3 && !loggedIn) {
+                    while (++loginAttempts <= maxLoginAttempt && !loggedIn) {
                         loggedIn = login();
                         if (loggedIn) {
                             System.out.println("Logged in successfully");
                             startUser();
-                        } else {
-                            System.out.println("Invalid credentials");
+                        } else if (loginAttempts != maxLoginAttempt) {
+                            System.out.println("Invalid credentials. Attempts left : " + (3 - loginAttempts));
                         }
                     }
                     if (!loggedIn) {
                         System.out.println("Multiple attempts failed. Please try again later");
                     }
-                } else if ("register".equalsIgnoreCase(choice)) {
+                } else if ("register".equalsIgnoreCase(choice) || "r".equalsIgnoreCase(choice)) {
                     if (register()) {
                         System.out.println("Registered successfully");
                     }
+                } else if("exit".equalsIgnoreCase(choice) || "e".equalsIgnoreCase(choice)) {
+                    System.out.println("Have a great day");
+                    break;
+                }else {
+                    System.out.println("Invalid option");
                 }
-
             }
         } catch (Exception e) {
             System.out.println("Exception in LibraryManager" + e);

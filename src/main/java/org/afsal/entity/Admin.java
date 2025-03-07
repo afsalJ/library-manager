@@ -12,7 +12,6 @@ public class Admin implements User {
     public               boolean loggedIn;
     private final static Scanner adminScanner = LibraryManager.inputScanner;
     private final static UserDao userDao      = LibraryManager.userDao;
-    public static        String  menu         = "1.Add User (AU)\n2.Delete User (DU)\n3.Display All Users (DAU)\n4.Logout (L)";
 
     public Admin(String username, String password) {
         this.username = username;
@@ -98,4 +97,8 @@ public class Admin implements User {
         return "Username: " + username;
     }
 
+    @Override
+    public String getMenu(){
+        return "1.Add User (AU)\n2.Delete User (DU)\n3.Display All Users (DAU)\n4.Logout (L)";
+    }
 }

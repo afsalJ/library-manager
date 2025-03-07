@@ -19,6 +19,8 @@ public class LibraryManager {
     private static      HashMap<String, List<Integer>> booksByUser  = new HashMap<>();
     private static      User                           user;
     private static      String                         menu         = "1.Login\n2.Register";
+    private static      String                         passwordRule = "^(?=\\S+$).{8,}$";
+    private static      String                         usernameRule = "^[a-zA-Z0-9_]{4,}$";
 
     public static boolean authenticate(String username, String password) {
         if (username != null && password != null) {
@@ -69,13 +71,22 @@ public class LibraryManager {
         return authenticate(username, password);
     }
 
-    public static void register() {
+    public static boolean register() {
         System.out.print("Enter username:");
         String username = inputScanner.nextLine();
         System.out.print("Enter password:");
         String password = inputScanner.nextLine();
-        user = new Patron(username, password);
-        userDao.addUser(user);
+        if (username.matches(usernameRule)) {
+            if (password.matches(passwordRule)) {
+                user = new Patron(username, password);
+                return userDao.addUser(user);
+            } else {
+                System.out.println("Password must not contain space\nMust be more than 8 characters");
+            }
+        } else {
+            System.out.println("Username can contain only alphabets,numbers and underscores\nMinimum 4 characters long");
+        }
+        return false;
     }
 
     public static void startUser() {
@@ -119,8 +130,11 @@ public class LibraryManager {
                         System.out.println("Multiple attempts failed. Please try again later");
                     }
                 } else if ("register".equalsIgnoreCase(choice)) {
-                    register();
-                    System.out.println("Registered successfully");
+                    if (register()) {
+                        System.out.println("Registered successfully");
+                    } else {
+                        System.out.println("Username already exists!");
+                    }
                 }
 
             }

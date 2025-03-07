@@ -18,10 +18,12 @@ public class UserDao {
         users.put(admin.getUsername(), admin);
     }
 
-    public void addUser(User user) {
-        if (user != null) {
+    public boolean addUser(User user) {
+        if (user != null && !users.containsKey(user.getUsername())) {
             users.put(user.getUsername(), user);
+            return true;
         }
+        return false;
     }
 
     public User getUser(String username) {

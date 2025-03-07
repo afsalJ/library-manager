@@ -51,13 +51,13 @@ public class Admin implements User {
         loggedIn = false;
     }
 
-    private void addUser() {
+    private boolean addUser() {
         System.out.print("Enter username:");
         String username = adminScanner.nextLine();
         System.out.print("Enter password:");
         String password = adminScanner.nextLine();
         User user = new Patron(username, password);
-        userDao.addUser(user);
+        return userDao.addUser(user);
     }
 
     private void deleteUser() {
@@ -77,7 +77,11 @@ public class Admin implements User {
 
     public void startOperation(String action) {
         if ("add user".equalsIgnoreCase(action) || "au".equalsIgnoreCase(action)) {
-            addUser();
+            if (addUser()){
+                System.out.println("User added successfully");
+            } else {
+                System.out.println("Username already exists!");
+            }
         } else if ("delete user".equalsIgnoreCase(action) || "du".equalsIgnoreCase(action)) {
             deleteUser();
         } else if ("display all users".equalsIgnoreCase(action) || "dau".equalsIgnoreCase(action)) {

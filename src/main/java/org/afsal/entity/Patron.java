@@ -28,13 +28,13 @@ public class Patron implements User {
 
     private void returnBook() {
         int noOfBorrowedBooks = LibraryManager.displayBorrowedBooks(this);
-        if(noOfBorrowedBooks>0) {
+        if (noOfBorrowedBooks > 0) {
             System.out.print("Enter book id:");
             int id = patronScanner.nextInt();
             patronScanner.nextLine();
             LibraryManager.returnBorrowedBook(this, id);
             System.out.println("Book returned successfully");
-        } else{
+        } else {
             System.out.println("No books borrowed");
         }
     }

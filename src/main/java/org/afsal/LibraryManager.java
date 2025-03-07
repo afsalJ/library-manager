@@ -30,11 +30,11 @@ public class LibraryManager {
 
     public static int displayBorrowedBooks(User user) {
         List<Integer> borrowedBooks = booksByUser.get(user.getUsername());
-        if (borrowedBooks==null || borrowedBooks.isEmpty()) {
+        if (borrowedBooks == null || borrowedBooks.isEmpty()) {
             return 0;
         }
         System.out.println("Borrowed books:");
-        for(int bookId : borrowedBooks) {
+        for (int bookId : borrowedBooks) {
             System.out.println(bookDao.getBook(bookId));
         }
         return borrowedBooks.size();
@@ -52,7 +52,7 @@ public class LibraryManager {
     public static void returnBorrowedBook(User user, int bookId) {
         List<Integer> borrowedBooks = booksByUser.get(user.getUsername());
         if (borrowedBooks != null) {
-            borrowedBooks.remove((Integer)bookId);
+            borrowedBooks.remove((Integer) bookId);
         }
         booksByUser.put(user.getUsername(), borrowedBooks);
     }

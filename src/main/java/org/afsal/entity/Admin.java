@@ -91,7 +91,7 @@ public class Admin implements User {
 
     @Override
     public String toString() {
-        return "Username: "+username;
+        return "Username: " + username;
     }
 
 }

@@ -2,6 +2,7 @@ package org.afsal.entity;
 
 import org.afsal.LibraryManager;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Patron implements User {
@@ -17,12 +18,15 @@ public class Patron implements User {
     }
 
     private void borrowBook() {
-        LibraryManager.displayAllBooks();
-        System.out.print("Enter book id:");
-        int id = patronScanner.nextInt();
-        patronScanner.nextLine();
-        LibraryManager.borrowBook(this, id);
-        System.out.println("Have a great time reading");
+        try {
+            LibraryManager.displayAllBooks();
+            System.out.print("Enter book id:");
+            int id = patronScanner.nextInt();
+            patronScanner.nextLine();
+            LibraryManager.borrowBook(this, id);
+        } catch (InputMismatchException e) {
+            System.out.println("Kindly provide valid input");
+        }
     }
 
     private void returnBook() {

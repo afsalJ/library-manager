@@ -43,4 +43,7 @@ public class BookDao {
         books.remove(id);
     }
 
+    public boolean hasBook(int id){
+        return books.containsKey(id);
+    }
 }

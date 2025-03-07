@@ -5,23 +5,22 @@ import org.afsal.dao.UserDao;
 import org.afsal.entity.Patron;
 import org.afsal.entity.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.HashMap;
 
 public class LibraryManager {
 
-    public static final Scanner                        inputScanner    = new Scanner(System.in);
-    public static       UserDao                        userDao         = new UserDao();
-    public static       BookDao                        bookDao         = new BookDao();
-    private static      HashMap<String, List<Integer>> booksByUser     = new HashMap<>();
-    private static      User                           user;
-    private static      String                         menu            = "1.Login (L)\n2.Register (R)\n3.Exit (E)";
-    private static      String                         passwordRule    = "^(?=\\S+$).{8,}$";
-    private static      String                         usernameRule    = "^[a-zA-Z0-9_]{4,}$";
-    private static      boolean                        loggedIn        = false;
-    private static      int                            maxLoginAttempt = 3;
+    public static final Scanner                           inputScanner    = new Scanner(System.in);
+    public static       UserDao                           userDao         = new UserDao();
+    public static       BookDao                           bookDao         = new BookDao();
+    private static      HashMap<String, HashSet<Integer>> booksByUser     = new HashMap<>();
+    private static      User                              user;
+    private static      String                            menu            = "1.Login (L)\n2.Register (R)\n3.Exit (E)";
+    private static      String                            passwordRule    = "^(?=\\S+$).{8,}$";
+    private static      String                            usernameRule    = "^[a-zA-Z0-9_]{4,}$";
+    private static      boolean                           loggedIn        = false;
+    private static      int                               maxLoginAttempt = 3;
 
     public static boolean authenticate(String username, String password) {
         if (username != null && password != null) {
@@ -32,7 +31,7 @@ public class LibraryManager {
     }
 
     public static int displayBorrowedBooks(User user) {
-        List<Integer> borrowedBooks = booksByUser.get(user.getUsername());
+        HashSet<Integer> borrowedBooks = booksByUser.get(user.getUsername());
         if (borrowedBooks == null || borrowedBooks.isEmpty()) {
             return 0;
         }
@@ -44,18 +43,26 @@ public class LibraryManager {
     }
 
     public static void borrowBook(User user, int bookId) {
-        List<Integer> borrowedBooks = booksByUser.get(user.getUsername());
+        HashSet<Integer> borrowedBooks = booksByUser.get(user.getUsername());
         if (borrowedBooks == null) {
-            borrowedBooks = new ArrayList<>();
+            borrowedBooks = new HashSet<>();
         }
-        borrowedBooks.add(bookId);
-        booksByUser.put(user.getUsername(), borrowedBooks);
+        if(bookDao.hasBook(bookId)) {
+            if (borrowedBooks.add(bookId)) {
+                booksByUser.put(user.getUsername(), borrowedBooks);
+                System.out.println("Have a great time reading");
+            } else {
+                System.out.println("You already have this book");
+            }
+        } else {
+            System.out.println("No book available with that id");
+        }
     }
 
     public static void returnBorrowedBook(User user, int bookId) {
-        List<Integer> borrowedBooks = booksByUser.get(user.getUsername());
+        HashSet<Integer> borrowedBooks = booksByUser.get(user.getUsername());
         if (borrowedBooks != null) {
-            borrowedBooks.remove((Integer) bookId);
+            borrowedBooks.remove(bookId);
         }
         booksByUser.put(user.getUsername(), borrowedBooks);
     }

@@ -5,24 +5,26 @@ public class Book {
     private int     id;
     private String  title;
     private String  author;
-    private String  rating;
+    private float  rating;
     private String  genre;
     private String  otherDetails;
     private Integer price;
+    private int quantity;
 
     public Book() {
     }
 
-    public Book(String title, String author, String rating, String genre, String otherDetails, Integer price) {
+    public Book(String title, String author, float rating, String genre, String otherDetails, Integer price, int quantity) {
         this.title = title;
         this.author = author;
         this.rating = rating;
         this.genre = genre;
         this.otherDetails = otherDetails;
         this.price = price;
+        this.quantity = quantity;
     }
 
-    public Book(int id, String title, String author, String rating, String genre, String otherDetails, Integer price) {
+    public Book(int id, String title, String author, float rating, String genre, String otherDetails, Integer price, int quantity) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -30,6 +32,7 @@ public class Book {
         this.genre = genre;
         this.otherDetails = otherDetails;
         this.price = price;
+        this.quantity = quantity;
     }
 
     public int getId() {
@@ -56,11 +59,11 @@ public class Book {
         this.author = author;
     }
 
-    public String getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
@@ -88,8 +91,20 @@ public class Book {
         this.price = price;
     }
 
+    public boolean isAvailable() {
+        return this.quantity > 0;
+    }
+
+    public void borrowBook() {
+        this.quantity = quantity - 1;
+    }
+
+    public void returnBook() {
+        this.quantity = quantity + 1;
+    }
+
     @Override
     public String toString() {
-        return "Book id=" + id + ", title='" + title + '\'' + ", author='" + author + '\'' + ", rating='" + rating + '\'' + ", genre='" + genre + '\'' + ", otherDetails='" + otherDetails + '\'' + ", price=" + price;
+        return "Book id=" + id + ", title='" + title + '\'' + ", author='" + author + '\'' + ", rating='" + rating + '\'' + ", genre='" + genre + '\'' + ", otherDetails='" + otherDetails+ '\'';
     }
 }

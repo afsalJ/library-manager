@@ -19,11 +19,22 @@ public class Patron implements User {
 
     private void borrowBook() {
         try {
-            LibraryManager.displayAllBooks();
-            System.out.print("Enter book id:");
-            int id = patronScanner.nextInt();
-            patronScanner.nextLine();
-            LibraryManager.borrowBook(this, id);
+            System.out.print("1.Display All Books (DAU)\n2.Search Book (SB)\n:");
+            String choice = patronScanner.nextLine();
+            int noOfBooksAvailable = 0;
+            if ("display all books".equalsIgnoreCase(choice) || "dau".equalsIgnoreCase(choice)) {
+                noOfBooksAvailable = LibraryManager.displayAllUnBorrowedBooks();
+            } else {
+                noOfBooksAvailable = LibraryManager.searchBook();
+            }
+            if (noOfBooksAvailable > 0) {
+                System.out.print("Enter book id:");
+                int id = patronScanner.nextInt();
+                patronScanner.nextLine();
+                LibraryManager.borrowBook(this, id);
+            } else {
+                System.out.println("No books Available");
+            }
         } catch (InputMismatchException e) {
             System.out.println("Kindly provide valid input");
         }
@@ -36,7 +47,6 @@ public class Patron implements User {
             int id = patronScanner.nextInt();
             patronScanner.nextLine();
             LibraryManager.returnBorrowedBook(this, id);
-            System.out.println("Book returned successfully");
         } else {
             System.out.println("No books borrowed");
         }

@@ -15,10 +15,19 @@ public class BookDao {
     }
 
     public void initializeBooks() {
-        books.put(1, new Book(1, "The Alchemist", "Paulo Coelho", 4.5f, "Adventure", "A book about following your dreams", 500, 1));
-        books.put(2, new Book(2, "The Da Vinci Code", "Dan Brown", 4.2f, "Mystery", "A book about", 600, 6));
-        books.put(3, new Book(3, "The Great Gatsby", "F. Scott Fitzgerald", 4.1f, "Fiction", "A book about", 700, 7));
-        books.put(4, new Book(4, "The Catcher in the Rye", "J.D. Salinger", 4.0f, "Fiction", "A book about", 800, 8));
+        books.put(1, new Book(1, "The Alchemist", "Paulo Coelho", 4.5f, "Adventure", "A book about following your dreams", 1));
+        books.put(2, new Book(2, "The Da Vinci Code", "Dan Brown", 4.2f, "Mystery", "A book about", 6));
+        books.put(3, new Book(3, "The Great Gatsby", "F. Scott Fitzgerald", 4.1f, "Fiction", "A book about", 7));
+        books.put(4, new Book(4, "The Catcher in the Rye", "J.D. Salinger", 4.0f, "Fiction", "A book about", 8));
+    }
+
+    public int generateId(){
+        for(int i = 1;i<=books.size();i++){
+            if(!books.containsKey(i)){
+                return i;
+            }
+        }
+        return books.size()+1;
     }
 
     public void displayAllBooks() {
@@ -28,11 +37,11 @@ public class BookDao {
         }
     }
 
-    public int displayAllUnBorrowedBooks() {
-        int i = 1;
+    public int displayAllAvailableBooks() {
+        int i = 0;
         for (Book book : books.values()) {
             if (book.isAvailable()) {
-                System.out.println(i++ + ". " + book);
+                System.out.println(++i + ". " + book);
             }
         }
         return i;
@@ -96,7 +105,7 @@ public class BookDao {
     public void saveBook(Book book) {
         if (book != null) {
             if (book.getId() <= 0) {
-                book.setId(books.size() + 1);
+                book.setId(generateId());
             }
             books.put(book.getId(), book);
         }

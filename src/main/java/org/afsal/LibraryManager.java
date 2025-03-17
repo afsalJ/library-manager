@@ -2,9 +2,7 @@ package org.afsal;
 
 import org.afsal.dao.BookDao;
 import org.afsal.dao.UserDao;
-import org.afsal.entity.Book;
-import org.afsal.entity.Patron;
-import org.afsal.entity.User;
+import org.afsal.entity.*;
 
 import java.util.*;
 
@@ -28,6 +26,48 @@ public class LibraryManager {
             return user != null && user.login(password);
         }
         return false;
+    }
+
+    public static void removeBook(int bookId, User user){
+        if(user instanceof Admin || user instanceof Clerk){
+            Book book = bookDao.getBook(bookId);
+            book.setAvailable(false);
+            System.out.println("Book removed successfully");
+        } else {
+            System.out.println("Permission not granted");
+        }
+    }
+    public static void addBook(String title, String author, float rating, String genre, String otherDetails, int quantity){
+        List<Book> books = bookDao.getBooksByTitle(title);
+        if (books ==null || books.isEmpty()){
+            Book newBook = new Book(0, title, author, rating, genre, otherDetails, quantity);
+            bookDao.saveBook(newBook);
+            System.out.println("Saved successfully");
+        } else {
+            System.out.print("Book is already available\nDo you want to update the details (yes/no):");
+            String choice = inputScanner.nextLine();
+            if("yes".equalsIgnoreCase(choice)){
+                updateBook(books.getFirst().getId(), title, author, rating, genre, otherDetails, quantity);
+            } else {
+                System.out.println("Not updated");
+            }
+        }
+    }
+
+    public static void updateBook(int id, String title, String author, float rating, String genre, String otherDetails, int quantity){
+        Book book = bookDao.getBook(id);
+        if (book!=null) {
+            book.setTitle(title);
+            book.setAuthor(author);
+            book.setGenre(genre);
+            book.setRating(rating);
+            book.setOtherDetails(otherDetails);
+            book.setGenre(genre);
+            book.setQuantity(quantity);
+            System.out.println("Updated successfully");
+        } else {
+            System.out.println("Book Unavailable");
+        }
     }
 
     public static int displayBorrowedBooks(User user) {
@@ -72,6 +112,13 @@ public class LibraryManager {
             Book borrowedBook = bookDao.getBook(bookId);
             borrowedBook.returnBook();
             System.out.println("Book returned successfully");
+            System.out.print("Give your rating from 1 to 5:");
+            float rating = inputScanner.nextFloat();
+            inputScanner.nextLine();
+            if (rating<1.0f) rating = 1.0f;
+            if (rating>5.0f) rating = 5.0f;
+            borrowedBook.setRating((borrowedBook.getRating()+rating)/2.0f);
+            System.out.println("Thank you for the feedback");
         } else {
             System.out.println("Book with id " + bookId + " is not borrowed");
         }
@@ -81,8 +128,8 @@ public class LibraryManager {
         bookDao.displayAllBooks();
     }
 
-    public static int displayAllUnBorrowedBooks() {
-        return bookDao.displayAllUnBorrowedBooks();
+    public static int displayAllAvailableBooks() {
+        return bookDao.displayAllAvailableBooks();
     }
 
     public static int searchBook() {
@@ -161,7 +208,6 @@ public class LibraryManager {
 
     public static void main(String[] args) {
         try {
-            bookDao.initializeBooks();
             userDao.initialize();
             while (true) {
                 System.out.println("Welcome to the Library Manager");

@@ -8,31 +8,21 @@ public class Book {
     private float  rating;
     private String  genre;
     private String  otherDetails;
-    private Integer price;
     private int quantity;
+    private boolean isAvailable;
 
     public Book() {
     }
 
-    public Book(String title, String author, float rating, String genre, String otherDetails, Integer price, int quantity) {
-        this.title = title;
-        this.author = author;
-        this.rating = rating;
-        this.genre = genre;
-        this.otherDetails = otherDetails;
-        this.price = price;
-        this.quantity = quantity;
-    }
-
-    public Book(int id, String title, String author, float rating, String genre, String otherDetails, Integer price, int quantity) {
+    public Book(int id, String title, String author, float rating, String genre, String otherDetails, int quantity) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.rating = rating;
         this.genre = genre;
         this.otherDetails = otherDetails;
-        this.price = price;
         this.quantity = quantity;
+        this.isAvailable = true;
     }
 
     public int getId() {
@@ -83,16 +73,20 @@ public class Book {
         this.otherDetails = otherDetails;
     }
 
-    public Integer getPrice() {
-        return price;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public boolean isAvailable() {
-        return this.quantity > 0;
+        return this.quantity > 0 && isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 
     public void borrowBook() {

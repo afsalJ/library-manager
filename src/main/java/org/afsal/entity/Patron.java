@@ -23,7 +23,7 @@ public class Patron implements User {
             String choice = patronScanner.nextLine();
             int noOfBooksAvailable = 0;
             if ("display all books".equalsIgnoreCase(choice) || "dau".equalsIgnoreCase(choice)) {
-                noOfBooksAvailable = LibraryManager.displayAllUnBorrowedBooks();
+                noOfBooksAvailable = LibraryManager.displayAllAvailableBooks();
             } else {
                 noOfBooksAvailable = LibraryManager.searchBook();
             }

@@ -55,7 +55,14 @@ public class Admin implements User {
         String username = adminScanner.nextLine();
         System.out.print("Enter password:");
         String password = adminScanner.nextLine();
-        User user = new Patron(username, password);
+        System.out.print("Enter user type:");
+        String userType = adminScanner.nextLine();
+        User user;
+        if("clerk".equalsIgnoreCase(userType)){
+            user = new Clerk(username, password);
+        } else {
+            user = new Patron(username, password);
+        }
         return userDao.addUser(user);
     }
 
